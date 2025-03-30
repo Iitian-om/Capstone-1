@@ -24,10 +24,15 @@ mongoose.connect(process.env.MONGO_URI, {
   console.error(err);
 });
 
-// Define Routes
+// Define Rou// Define Routes
+app.use('/api/auth', require('./routes/auth'));
+app.use('/api/users', require('./routes/users'));
+app.use('/api/payment', require('./routes/payment'));
+
 app.get('/', (req, res) => {
   res.send('Welcome to EDU-HUB LMS');
 });
+
 
 // Listen on port
 const PORT = process.env.PORT || 5000;
