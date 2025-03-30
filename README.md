@@ -37,6 +37,7 @@ Follow these steps to set up the project locally.
 ```sh
 git clone https://github.com/Iitian-om/Capstone-1.git
 cd Capstone-1
+```
 
 ### Payment Integration
 Eduhub uses Stripe for secure payment processing. Ensure your Stripe keys are correctly set in the .env file.
