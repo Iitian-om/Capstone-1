@@ -1,34 +1,172 @@
 const mongoose = require('mongoose');
-const bcrypt = require('bcryptjs');
+import bcrypt from 'bcryptjs';
 
+// Define the User schema
 const UserSchema = new mongoose.Schema({
-  name: {
+  // User's first name (required)
+  firstName: {
     type: String,
     required: true
   },
+  // User's last name (optional, defaults to an empty string)
+  lastName: {
+    type: String,
+    default: ''
+  },
+  // Unique username with a users and moderstor files and  maximum length of 15 characters (required)
+  userName: {
+    type: String,
+    required: true,
+    unique: true,
+    maxlength: 15
+  },
+  // User's email must end with '@iitp.ac.in' and be unique (required)
   email: {
     type: String,
     required: true,
-    unique: true
+    unique: true,
+    match: /@iitp\.ac\.in$/
   },
+  // User's password with a minimum length of 7 characters, containing at least one uppercase letter, one lowercase letter, and one number (required)
   password: {
     type: String,
-    required: true
+    required: true,
+    minlength: 7,
+    validate: {
+      validator: function(v) {
+        return /[A-Z]/.test(v) && /[a-z]/.test(v) && /\d/.test(v);
+      },
+      message: props => `${props.value} is not a valid password!`
+    }
   },
+  // Role of the user, can be 'user' or 'teacher' (default is 'user')
+  // Note: Official roles ('moderator', 'manager') are not assigned by users
   role: {
     type: String,
     enum: ['user', 'teacher'],
     default: 'user'
+  },
+  // Full name of the user, automatically set as "FirstName LastName"
+  fullName: {
+    type: String
+  },
+  // URL or path to the profile image (optional)
+  profileImage: {
+    type: String
+  },
+  // User's bio can be a paragraph with a maximum of 70 characters (optional)
+  bio: {
+    type: String,
+    maxlength: 70
+  },
+  // Official roles for moderator and manager (not visible to users on registartion time)
+  // This role is not assigned by users, only by the system or official Team.
+  officialRole: {
+    type: String,
+    enum: ['moderator', 'manager'],
+    default: null
+  },
+  // Admin role only for the most powerful user(HEAD of APP), only one person can hold this role at a time (not visible to users via registration)
+  // This role is not assigned by users, only by the system.
+  isAdmin: {
+    type: Boolean,
+    default: false
   }
 });
 
+// Middleware to hash the password before saving the user document
 UserSchema.pre('save', async function(next) {
+  // Check if the password field is modified
   if (!this.isModified('password')) {
     return next();
   }
-  const salt = await bcrypt.genSalt(10);
+  // Generate a salt with a factor of 7 to reduce computation time
+  const salt = await bcrypt.genSalt(7);
+  // Hash the password using the generated salt
   this.password = await bcrypt.hash(this.password, salt);
   next();
 });
 
+// Middleware to set the full name before saving the user document
+UserSchema.pre('save', function(next) {
+  // Concatenate first name and last name to form the full name
+  this.fullName = this.lastName ? `${this.firstName} ${this.lastName}` : this.firstName;
+  next();
+});
+
+// Export the User model
 module.exports = mongoose.model('User', UserSchema);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// const mongoose = require('mongoose');
+// const bcrypt = require('bcryptjs');
+
+// const UserSchema = new mongoose.Schema({
+//   firstName: {
+//     type: String,
+//     required: true
+//   },
+//   lastName: {
+//     type: String,
+//     default: ''
+//   },
+//   userName: {
+//     type: String,
+//     required: true,
+//     unique: true
+//   },
+//   email: {
+//     type: String,
+//     required: true,
+//     unique: true
+//   },
+//   password: {
+//     type: String,
+//     required: true
+//   },
+//   role: {
+//     type: String,
+//     enum: ['user', 'teacher'],
+//     default: 'user'
+//   },
+//   name: {
+//     type: String
+//   }
+// });
+
+// UserSchema.pre('save', async function(next) {
+//   if (!this.isModified('password')) {
+//     return next();
+//   }
+//   const salt = await bcrypt.genSalt(7);
+//   this.password = await bcrypt.hash(this.password, salt);
+//   next();
+// });
+
+// UserSchema.pre('save', function(next) {
+//   this.name = this.lastName ? `${this.firstName} ${this.lastName}` : this.firstName;
+//   next();
+// });
+
+// module.exports = mongoose.model('User', UserSchema);

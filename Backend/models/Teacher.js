@@ -1,5 +1,6 @@
-const mongoose = require('mongoose');
-const bcrypt = require('bcryptjs');
+import mongoose from 'mongoose';
+
+import bcrypt from 'bcryptjs';
 
 const TeacherSchema = new mongoose.Schema({
     name: {

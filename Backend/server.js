@@ -1,9 +1,10 @@
-require('dotenv').config();
-const express = require('express');
-const mongoose = require('mongoose');
-const bodyParser = require('body-parser');
-const path = require('path');
+import dotenv from 'dotenv';
+import express from 'express';
+import mongoose from 'mongoose';
+import bodyParser from 'body-parser';
+import path from 'path';
 
+dotenv.config();
 const app = express();
 
 // Middleware
@@ -24,14 +25,13 @@ mongoose.connect(process.env.MONGO_URI, {
   console.error(err);
 });
 
-// Define Rou// Define Routes
-app.use('/api/auth', require('./routes/auth'));
-app.use('/api/users', require('./routes/users'));
+// Define Routes
+app.use('/api/auth', require('/routes/auth'));
+app.use('/api/users', require('/routes/users'));
 
 app.get('/', (req, res) => {
   res.send('Welcome to EDU-HUB LMS');
 });
-
 
 // Listen on port
 const PORT = process.env.PORT || 5000;
