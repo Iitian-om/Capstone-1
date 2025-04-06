@@ -1,4 +1,5 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
+// Import bcrypt for password hashing
 import bcrypt from 'bcryptjs';
 
 // Define the User schema
@@ -93,80 +94,7 @@ UserSchema.pre('save', function(next) {
   this.fullName = this.lastName ? `${this.firstName} ${this.lastName}` : this.firstName;
   next();
 });
-
+// Store the user in the database
+const User = mongoose.model('User', UserSchema);
 // Export the User model
-module.exports = mongoose.model('User', UserSchema);
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// const mongoose = require('mongoose');
-// const bcrypt = require('bcryptjs');
-
-// const UserSchema = new mongoose.Schema({
-//   firstName: {
-//     type: String,
-//     required: true
-//   },
-//   lastName: {
-//     type: String,
-//     default: ''
-//   },
-//   userName: {
-//     type: String,
-//     required: true,
-//     unique: true
-//   },
-//   email: {
-//     type: String,
-//     required: true,
-//     unique: true
-//   },
-//   password: {
-//     type: String,
-//     required: true
-//   },
-//   role: {
-//     type: String,
-//     enum: ['user', 'teacher'],
-//     default: 'user'
-//   },
-//   name: {
-//     type: String
-//   }
-// });
-
-// UserSchema.pre('save', async function(next) {
-//   if (!this.isModified('password')) {
-//     return next();
-//   }
-//   const salt = await bcrypt.genSalt(7);
-//   this.password = await bcrypt.hash(this.password, salt);
-//   next();
-// });
-
-// UserSchema.pre('save', function(next) {
-//   this.name = this.lastName ? `${this.firstName} ${this.lastName}` : this.firstName;
-//   next();
-// });
-
-// module.exports = mongoose.model('User', UserSchema);
+export default User;

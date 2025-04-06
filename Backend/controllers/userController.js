@@ -1,9 +1,9 @@
-import User from '/models/User';
-
+import User from '../models/User.js';
+import mongoose from 'mongoose';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 
-exports.getUsers = async (req, res) => {
+export const getUsers = async (req, res) => {
     try {
         const users = await User.find();
         res.json(users);
@@ -13,7 +13,7 @@ exports.getUsers = async (req, res) => {
     }
 };
 
-exports.updateUser = async (req, res) => {
+export const updateUser = async (req, res) => {
     const { id } = req.params;
     const { name, email, role } = req.body;
 
@@ -36,7 +36,7 @@ exports.updateUser = async (req, res) => {
     }
 };
 
-exports.deleteUser = async (req, res) => {
+export const deleteUser = async (req, res) => {
     const { id } = req.params;
 
     try {
