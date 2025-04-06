@@ -1,8 +1,8 @@
+require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const path = require('path');
-require('dotenv').config();
 
 const app = express();
 
@@ -27,7 +27,6 @@ mongoose.connect(process.env.MONGO_URI, {
 // Define Rou// Define Routes
 app.use('/api/auth', require('./routes/auth'));
 app.use('/api/users', require('./routes/users'));
-app.use('/api/payment', require('./routes/payment'));
 
 app.get('/', (req, res) => {
   res.send('Welcome to EDU-HUB LMS');
